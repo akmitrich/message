@@ -1,4 +1,11 @@
+pub mod content_length;
+
 use crate::common_str::*;
+pub use content_length::ContentLength;
+
+pub trait GenericHeader {
+    fn to_generic_header(&self) -> Header;
+}
 
 pub struct Header {
     pub name: String,
@@ -38,24 +45,5 @@ impl Parameter {
         result.extend_from_slice(b"=");
         result.extend_from_slice(self.value.as_bytes());
         result
-    }
-}
-
-#[derive(Default)]
-pub struct ContentLength {
-    length: usize,
-}
-
-impl ContentLength {
-    pub fn new(length: usize) -> Self {
-        Self { length }
-    }
-
-    pub fn header(&self) -> Header {
-        Header {
-            name: "Content-Length".to_owned(),
-            value: format!("{}", self.length),
-            parameters: vec![],
-        }
     }
 }

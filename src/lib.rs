@@ -4,12 +4,12 @@ mod method;
 mod start_line;
 
 use common_str::*;
-use header::{ContentLength, Header};
+use header::{ContentLength, GenericHeader};
 use start_line::StartLine;
 
 pub struct Message {
     start_line: StartLine,
-    headers: Vec<Header>,
+    headers: Vec<Box<dyn GenericHeader>>,
     body: Vec<u8>,
 }
 
@@ -17,7 +17,7 @@ impl Message {
     pub fn to_bytes(&self) -> Vec<u8> {
         let mut result = Vec::new();
         result.append(&mut self.start_line.to_bytes());
-        for header in self.headers.iter() {
+        for header in self.headers.iter().map(|header| header.to_generic_header()) {
             if header.is_content_length() {
                 continue;
             }
@@ -31,7 +31,11 @@ impl Message {
 
     fn append_content_length_header(&self, bytes: &mut Vec<u8>) {
         if !self.body.is_empty() {
-            bytes.extend_from_slice(&ContentLength::new(self.body.len()).header().to_bytes())
+            bytes.extend_from_slice(
+                &ContentLength::new(self.body.len())
+                    .to_generic_header()
+                    .to_bytes(),
+            )
         }
     }
 }
@@ -49,11 +53,7 @@ mod tests {
                 uri: "sip:alice@sip-server.sip".to_owned(),
                 version: SIP_2_0.to_owned(),
             },
-            headers: vec![Header {
-                name: "content-Length".to_owned(),
-                value: "Will be eliminated anyway".to_owned(),
-                parameters: vec![],
-            }],
+            headers: vec![ContentLength::new(56)],
             body: vec![0x20; 72],
         };
         assert_eq!(
@@ -70,11 +70,7 @@ mod tests {
                 code: 200,
                 reason_phrase: "OK".to_owned(),
             },
-            headers: vec![Header {
-                name: "content-Length".to_owned(),
-                value: "Will be eliminated anyway".to_owned(),
-                parameters: vec![],
-            }],
+            headers: vec![ContentLength::new(127)],
             body: vec![],
         };
         assert_eq!("SIP/2.0 200 OK\r\n\r\n".as_bytes(), res.to_bytes());
