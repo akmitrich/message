@@ -7,6 +7,7 @@ pub trait GenericHeader {
     fn to_generic_header(&self) -> Header;
 }
 
+#[derive(Clone)]
 pub struct Header {
     pub name: String,
     pub value: String,
@@ -14,6 +15,14 @@ pub struct Header {
 }
 
 impl Header {
+    pub fn with_name_value(name: &str, value: &str) -> Box<Self> {
+        Box::new(Self {
+            name: name.to_owned(),
+            value: value.to_owned(),
+            parameters: vec![],
+        })
+    }
+
     pub fn to_bytes(&self) -> Vec<u8> {
         let mut result = Vec::new();
         result.extend_from_slice(self.name.as_bytes());
@@ -33,6 +42,13 @@ impl Header {
     }
 }
 
+impl GenericHeader for Header {
+    fn to_generic_header(&self) -> Header {
+        self.clone()
+    }
+}
+
+#[derive(Clone)]
 pub struct Parameter {
     name: String,
     value: String,
