@@ -1,5 +1,5 @@
 use super::*;
-#[derive(Default)]
+#[derive(Default, Debug)]
 pub struct ContentLength {
     length: usize,
 }

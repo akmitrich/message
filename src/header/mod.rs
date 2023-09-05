@@ -1,13 +1,17 @@
-pub mod content_length;
+mod content_length;
+mod to;
+
+use std::fmt::Debug;
 
 use crate::common_str::*;
 pub use content_length::ContentLength;
+pub use to::To;
 
-pub trait GenericHeader {
+pub trait GenericHeader: Debug {
     fn to_generic_header(&self) -> Header;
 }
 
-#[derive(Clone)]
+#[derive(Debug, Clone)]
 pub struct Header {
     pub name: String,
     pub value: String,
@@ -48,7 +52,7 @@ impl GenericHeader for Header {
     }
 }
 
-#[derive(Clone)]
+#[derive(Debug, Clone)]
 pub struct Parameter {
     name: String,
     value: String,

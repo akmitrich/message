@@ -1,5 +1,6 @@
 use crate::{common_str::*, method::Method};
 
+#[derive(Debug)]
 pub enum StartLine {
     Request {
         method: Method,
