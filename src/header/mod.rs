@@ -1,11 +1,12 @@
 mod content_length;
-mod to;
+mod tagged_address;
 
 use std::fmt::Debug;
 
 use crate::common_str::*;
 pub use content_length::ContentLength;
-pub use to::To;
+pub use tagged_address::from::From;
+pub use tagged_address::to::To;
 
 pub trait GenericHeader: Debug {
     fn to_generic_header(&self) -> Header;
