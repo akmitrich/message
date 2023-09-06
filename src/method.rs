@@ -10,6 +10,12 @@ pub enum Method {
 
 impl Method {
     pub fn to_bytes(&self) -> Vec<u8> {
+        self.to_string().as_bytes().to_owned()
+    }
+}
+
+impl ToString for Method {
+    fn to_string(&self) -> String {
         match self {
             Method::Register => "REGISTER",
             Method::Invite => "INVITE",
@@ -18,7 +24,6 @@ impl Method {
             Method::Bye => "BYE",
             Method::Options => "OPTIONS",
         }
-        .as_bytes()
         .to_owned()
     }
 }
