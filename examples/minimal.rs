@@ -13,7 +13,7 @@ fn main() {
             To::new("Alice"),
             from,
             CallId::new("no way id"),
-            CSeq::new(Method::Invite, 177),
+            CSeq::new(Method::Invite, 177), MaxForwards::new(70)
         ],
         body: vec![42; 72],
     };

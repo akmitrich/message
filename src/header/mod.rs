@@ -1,16 +1,18 @@
 mod c_seq;
 mod content_length;
+mod max_forwards;
 mod tagged_header;
 mod text_header;
 
 use std::fmt::Debug;
 
 use crate::common_str::*;
+pub use c_seq::CSeq;
 pub use content_length::ContentLength;
+pub use max_forwards::MaxForwards;
 pub use tagged_header::from::From;
 pub use tagged_header::to::To;
 pub use text_header::call_id::CallId;
-pub use c_seq::CSeq;
 
 pub trait GenericHeader: Debug {
     fn to_generic_header(&self) -> Header;
