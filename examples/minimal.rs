@@ -13,7 +13,9 @@ fn main() {
             To::new("Alice"),
             from,
             CallId::new("no way id"),
-            CSeq::new(Method::Invite, 177), MaxForwards::new(70)
+            CSeq::new(Method::Invite, 177),
+            MaxForwards::new(70),
+            Via::new(Protocol::Udp, "sip-server.sip", "42gty4"),
         ],
         body: vec![42; 72],
     };
