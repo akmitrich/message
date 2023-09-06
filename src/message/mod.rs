@@ -28,14 +28,11 @@ impl Message {
             }
             result.extend(header.to_bytes());
         }
-        if mandatory_headers.is_empty() {
-            self.append_content_length_header(&mut result);
-            result.extend_from_slice(CRLF);
-            result.extend(self.body.iter());
-            Some(result)
-        } else {
-            None
-        }
+        // if mandatory_headers.is_empty() {
+        self.append_content_length_header(&mut result);
+        result.extend_from_slice(CRLF);
+        result.extend(self.body.iter());
+        Some(result)
     }
 
     fn append_content_length_header(&self, bytes: &mut Vec<u8>) {

@@ -1,14 +1,21 @@
 use message::{header::*, message::Message, method, start_line::StartLine};
 
 fn main() {
+    let mut from = From::new("Bob");
+    from.tag = "Directly set".to_owned();
     let req = Message {
         start_line: StartLine::Request {
             method: method::Method::Invite,
             uri: "sip:alice@sip-server.sip".to_owned(),
             version: b"SIP/2.0".to_vec(),
         },
-        headers: vec![To::new("Alice"), From::new("Bob")],
-        body: vec![127; 72],
+        headers: vec![To::new("Alice"), from, CallId::new("no way id")],
+        body: vec![42; 72],
     };
-    println!("{:?} --> {:?}", req, req.to_bytes());
+    println!(
+        "{:?} --> {:?}",
+        req,
+        req.to_bytes()
+            .and_then(|x| std::str::from_utf8(&x).map(|y| y.to_owned()).ok())
+    );
 }
