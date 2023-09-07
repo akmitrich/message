@@ -9,14 +9,14 @@ pub struct To {
 impl To {
     pub fn new(uri_string: impl ToString) -> Box<Self> {
         Box::new(Self {
-            tagged: TaggedHeader::new(super::AddressKind::To, uri_string),
+            tagged: TaggedHeader::new(uri_string),
         })
     }
 }
 
 impl GenericHeader for To {
     fn to_generic_header(&self) -> Header {
-        self.tagged.to_generic_header()
+        self.tagged.to_header("To")
     }
 }
 

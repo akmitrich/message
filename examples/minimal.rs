@@ -23,10 +23,9 @@ fn main() {
         "{:?} --> {:?}",
         req,
         req.to_bytes().and_then(|x| std::str::from_utf8(&x)
-            .map(|y| y.to_owned())
-            .map(|s| {
-                println!("START of a message[[\n{}\n]]the message END", s);
-                s
+            .map(|y| {
+                println!("START of a message[[\n{}\n]]the message END", y);
+                y.to_owned()
             })
             .ok())
     );

@@ -2,26 +2,16 @@ use super::*;
 pub(crate) mod from;
 pub(crate) mod to;
 
-#[derive(Debug, Default, Clone, Copy)]
-pub enum AddressKind {
-    #[default]
-    Other,
-    To,
-    From,
-}
-
 #[derive(Default, Debug)]
 pub struct TaggedHeader {
-    kind: AddressKind,
-    pub header: String,
+    pub value: String,
     pub tag: String,
 }
 
 impl TaggedHeader {
-    pub fn new(kind: AddressKind, header: impl ToString) -> Self {
+    pub fn new(value: impl ToString) -> Self {
         Self {
-            kind,
-            header: header.to_string(),
+            value: value.to_string(),
             tag: String::new(),
         }
     }
@@ -29,18 +19,11 @@ impl TaggedHeader {
     pub fn set_tag(&mut self, tag: impl ToString) {
         self.tag = tag.to_string();
     }
-}
 
-impl GenericHeader for TaggedHeader {
-    fn to_generic_header(&self) -> Header {
+    pub fn to_header(&self, header: impl ToString) -> Header {
         Header {
-            name: match self.kind {
-                AddressKind::Other => todo!(),
-                AddressKind::To => "To",
-                AddressKind::From => "From",
-            }
-            .to_owned(),
-            value: self.header.to_owned(),
+            name: header.to_string(),
+            value: self.value.to_owned(),
             parameters: if self.tag.is_empty() {
                 vec![]
             } else {

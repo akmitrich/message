@@ -46,21 +46,20 @@ impl GenericHeader for Via {
                 self.sent_protocol.to_string(),
                 self.sent_by
             ),
-            parameters: Vec::from_iter(
-                [
-                    ("received", self.received.as_ref()),
-                    ("branch", Some(&format!("{}{}", MAGIC_COOKIE, self.branch))),
-                    ("maddr", self.maddr.as_ref()),
-                    ("ttl", self.ttl.as_ref()),
-                ]
-                .iter()
-                .filter_map(|(name, x)| {
-                    x.map(|x| Parameter {
-                        name: name.to_string(),
-                        value: x.to_owned(),
-                    })
-                }),
-            ),
+            parameters: [
+                ("received", self.received.as_ref()),
+                ("branch", Some(&format!("{}{}", MAGIC_COOKIE, self.branch))),
+                ("maddr", self.maddr.as_ref()),
+                ("ttl", self.ttl.as_ref()),
+            ]
+            .iter()
+            .filter_map(|(name, x)| {
+                x.map(|x| Parameter {
+                    name: name.to_string(),
+                    value: x.to_owned(),
+                })
+            })
+            .collect(),
         }
     }
 }

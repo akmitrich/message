@@ -22,17 +22,20 @@ impl Message {
             if header.is_content_length() {
                 continue;
             }
-            let header_name = header.name.as_str();
-            if mandatory_headers.contains(header_name) {
-                mandatory_headers.remove(header_name);
+            let header_name = header.name.to_lowercase();
+            if mandatory_headers.contains(header_name.as_str()) {
+                mandatory_headers.remove(header_name.as_str());
             }
             result.extend(header.to_bytes());
         }
-        // if mandatory_headers.is_empty() {
-        self.append_content_length_header(&mut result);
-        result.extend_from_slice(CRLF);
-        result.extend(self.body.iter());
-        Some(result)
+        if mandatory_headers.is_empty() {
+            self.append_content_length_header(&mut result);
+            result.extend_from_slice(CRLF);
+            result.extend(self.body.iter());
+            Some(result)
+        } else {
+            None
+        }
     }
 
     fn append_content_length_header(&self, bytes: &mut Vec<u8>) {
